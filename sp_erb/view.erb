@@ -1,0 +1,46 @@
+<html>
+<head>
+<title> <%= params['page_id'] %> - SimplePaste view </title>
+
+<style type='text/css'>
+<!--
+pre#paste_body{
+  border: 1px solid gray;
+  padding: 0.5em;
+  
+  white-space: -moz-pre-wrap; /* Mozilla */
+  white-space: -pre-wrap;     /* Opera 4-6 */
+  white-space: -o-pre-wrap;   /* Opera 7 */
+  white-space: pre-wrap;      /* CSS3 */
+  word-wrap: break-word;      /* IE 5.5+ */
+}
+  -->
+</style>
+</head>
+
+<body>
+
+<%= params['header'] %>
+
+<pre id='paste_body'><%= params['body'] %></pre>
+
+<ul>
+
+<li>Paste time: <%= params['time'] %></li>
+<li>Paste IP addr: <%= params['ipaddr'] %>
+<li>Your paste URL is <a href='<%= params['v_url'] %>'><%= params['v_url'] %> </a></li>
+<li>Read only URL is <a href='<%= params['ro_url'] %>'><%= params['ro_url'] %> </a></li>
+<li><a href='<%= "#{script_url}/make" %>'>make new page</a></li>
+<% unless params['stick'] %>
+  <li><a href='<%= "#{script_url}/commit/delete/#{params['page_id']}" %>'>delete this page</a></li>
+  <li><a href='<%= "#{script_url}/commit/stick/#{params['page_id']}" %>'>stick this page</a></li>
+<% end %>
+
+<%= params['hooter'] %>
+</ul>
+
+</body>
+</html>
+
+
+

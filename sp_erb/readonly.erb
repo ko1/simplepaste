@@ -1,0 +1,29 @@
+<html>
+  <head>
+  <title> <%= params['page_id'] %> - SimplePaste readonly</title>
+
+<style type='text/css'>
+<!--
+pre#paste_body{
+  border: 1px solid gray;
+  padding: 0.5em;
+  
+  white-space: -moz-pre-wrap; /* Mozilla */
+  white-space: -pre-wrap;     /* Opera 4-6 */
+  white-space: -o-pre-wrap;   /* Opera 7 */
+  white-space: pre-wrap;      /* CSS3 */
+  word-wrap: break-word;      /* IE 5.5+ */
+}
+  -->
+</style>
+</head>
+
+<body>
+
+<pre id='paste_body'><%= params['body'] %></pre>
+
+</body>
+</html>
+
+
+

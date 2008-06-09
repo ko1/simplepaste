@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <title> FileSimplePaste: make </title>
+  </head>
+
+  <body>
+    <h1>Paste File</h1>
+    <form action='<%= script_name %>/commit/new' method='post' enctype='multipart/form-data'>
+      <% unless params['permitted'] %>
+      <h2>Limitation</h2>
+      <p>
+	<ul>
+	  <li> You can upload only image files. </li>
+	  <li> Max file size is 1 MB. </li>
+	</ul>
+      </p>
+      <% end %>
+
+      <h2>Upload Files</h2>
+      <p>
+	<ol>
+	  <li> <input name='paste_body' type='file' /> </li>
+	  <li> <input name='paste_body' type='file' /> </li>
+	  <li> <input name='paste_body' type='file' /> </li>
+	  <li> <input name='paste_body' type='file' /> </li>
+	  <li> <input name='paste_body' type='file' /> </li>
+	  <input type='hidden' name='page_id' value='<%= params['page_id'] %>'></input>
+	  <input type='submit' value='paste'></input>
+	</ol>
+      </p>
+      
+      <h2>Optional Setting</h2>
+      <p>
+	Set Your name and comment:
+	<ul>
+	  <li> Name: <input name='user_name'> </li>
+	  <li> Comment: <input name='user_comment'> </li>
+	</ul>
+      </p>
+      <p>
+	Set ID and Password to download:
+	<ul>
+	  <li> ID: <input name='auth_id'> </li>
+	  <li> Password: <input name='auth_passwd'> </li>
+	  <li> AuthName: <input name='auth_name'> (optional)</li>
+	</ul>
+      </p>
+    </form>
+  </body>
+</html>
+

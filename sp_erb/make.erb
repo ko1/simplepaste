@@ -1,0 +1,20 @@
+
+<html>
+<head>
+<title> SimplePaste: make </title>
+</head>
+<body>
+
+<form action='<%= script_name %>/commit/new' method='post'>
+<textarea name='paste_body' rows='30' cols='80'>
+</textarea>
+</br>
+<input type='hidden' name='page_id' value='<%= params['page_id'] %>'></input>
+<input type='submit' value='paste'></input>
+
+</form>
+</body>
+</html>
+
+
+

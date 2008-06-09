@@ -1,0 +1,57 @@
+﻿<html>
+  <head>
+    <title> Simple Paste </title>
+  </head>
+  <body>
+<h1> Simple Paste </h1>
+<p>
+<a href='<%= script_url %>'> <%= script_url %> </a> は、シンプルな情報交換場所です。使い捨てのデータをちょっと人に見てもらいたいときなどに利用してください。
+</p>
+
+<h2> 使い方 </h2>
+<p>
+<a href='<%= script_url %>/make'><%= script_url %>/make</a> のテキストエリアに何か書いて paste ボタンを押してください。
+</p>
+
+<p>
+Simple Paste は、ほかのアプリケーションと連携すると面白いんじゃないか
+なーなんて思っています。IRC とか、IRC とか、IRC とか。
+</p>
+
+<ul>
+<li><%= script_url %>/check/newid で、利用できる次の id を教えてもらえます。</li>
+<li><%= script_url %>/commit/auto で、ペーストした後、表示用ページにリダイレクトせずにその貼り付けた URL のみを返します。貼り付けるデータは、'paste_body' という名前で post してください。</li>
+<li><a href='<%= script_url %>/sp'> このプログラムのソースコード </a>。ライセンスは ruby's で。 </li>
+</ul>
+
+<h3> プログラムからの利用サンプル </h3>
+<pre>
+#!/usr/bin/env ruby
+# spc.rb
+
+require 'cgi'
+require 'net/http'
+
+body = CGI.escape(ARGF.read)
+
+Net::HTTP.version_1_2
+Net::HTTP.start('<%= @cgi.server_name %>', 80) {|http|
+  response = http.post('<%=script_name%>/commit/auto',
+    'paste_body=' + body)
+  puts response.body
+}
+</pre>
+
+<h2> ご注意 </h2>
+<ul>
+<li> 一切無保証です。貼り付けたデータはいつ消えるかわかりません。多分、気が向いたら消します。</li>
+<li>匿名性などもありません。見られてまずいデータは貼らないでください。</li>
+<li>見せちゃまずいデータも貼らないでください。</li>
+<li>delete しても、きちんと消えるかどうかは保障しません。</li>
+</ul>
+
+
+<address>SASADA Koichi / ko1 at atdot dot net</addres>
+</body>
+</html>
+

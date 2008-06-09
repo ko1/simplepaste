@@ -1,0 +1,112 @@
+﻿<html>
+  <head>
+    <title> File Simple Paste </title>
+  </head>
+  <body>
+    <h1> File Simple Paste </h1>
+    <p>
+      <a href='<%= script_url %>'> <%= script_url %> </a> は、シンプルな情報交換場所です。使い捨てのデータをちょっと人に見てもらいたいときなどに利用してください。Simple Paste と違い、ファイルを交換対象にします。
+    </p>
+
+    <h2> 使い方 </h2>
+    <p>
+      <a href='<%= script_url %>/make'><%= script_url %>/make</a> のファイルアップロード場所にファイル位置を指定して paste ボタンを押してください。
+    </p>
+
+    <p>
+      File Simple Paste は、ほかのアプリケーションと連携すると面白いんじゃないかなーなんて思っています。IRC とか、IRC とか、IRC とか。
+    </p>
+
+    <ul>
+      <li><%= script_url %>/check/newid で、利用できる次の id を教えてもらえます。</li>
+      <li><%= script_url %>/commit/auto で、ペーストした後、表示用ページにリダイレクトせずにその貼り付けた URL のみを返し&ます。貼り付けるデータは、'paste_body' という名前で post してください。</li>
+    </ul>
+
+<h3> プログラムからの利用サンプル </h3>
+<pre>
+UploadURL = 'http://www.atdot.net/fp/commit/auto'
+Password  = 'password'
+
+##########################
+require 'net/http'
+require 'uri'
+
+Net::HTTP.version_1_2
+
+def upload uri, files
+  uri      = URI.parse(uri)
+  if block_given?
+    boundary = yield
+  else
+    boundary = '--------------------------' +
+      Time.now.to_i.to_s(36) + '--' + rand(10000).to_s(36)
+  end
+
+  data = []
+  files.each{|file|
+    data << '--' + boundary
+    data << %Q(content-disposition: form-data; name="paste_body"; filename="#{file}")
+    data << 'content-type: application/octet-stream'
+    data << ''
+    data << open(file, 'rb'){|f| f.read}
+    data << "--#{boundary}"
+  }
+  #  data.pop
+  data << %Q(content-disposition: form-data; name="passwd")
+  data << ''
+  data << Password
+  data << "--#{boundary}--"
+  data << ''
+  
+  Net::HTTP.start(uri.host){|http|
+    header = {
+      'content-type' => "multipart/form-data; boundary=#{boundary}"
+    }
+    res = http.post(uri.path, data.join("\r\n"), header)
+    res.body
+  }
+end
+
+begin
+  raise('please select file') unless ARGV[0]
+  uri  = upload(UploadURL, ARGV)
+rescue => e
+#  puts e
+end
+
+# for Windows
+if uri
+  if uri.map.size > 1
+    puts uri
+  else
+    system "start #{uri}"
+  end
+end
+</pre>
+<p>
+
+このプログラムを fpc.rb として保存し、ruby fpc.rb というショートカット
+（Windows の機能）を作ります。そして、そのショートカットに画像ファイルな
+どをドラッグアンドドロップすると、勝手にアップロードされている、という仕
+掛けです。ウェブインターフェースと違い、複数ファイルの一括アップロードに
+対応しています。
+
+</p>
+
+<h2> ご注意 </h2>
+<ul>
+<li> 一切無保証です。貼り付けたデータはいつ消えるかわかりません。多分、気が向いたら消します。</li>
+<li>匿名性などもありません。見られてまずいデータは貼らないでください。</li>
+<li>見せちゃまずいデータも貼らないでください。</li>
+<li>delete しても、きちんと消えるかどうかは保障しません。</li>
+</ul>
+
+
+<address>SASADA Koichi / ko1 at atdot dot net</addres>
+</body>
+</html>
+
+
+
+
+
