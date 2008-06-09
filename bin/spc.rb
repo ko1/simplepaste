@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-TextPasteURL = 'http://www.atdot.net/fp/commit/auto'
+TextPasteURL = 'http://www.atdot.net/sp/commit/auto'
 
 ####################################################
 

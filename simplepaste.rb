@@ -62,7 +62,7 @@ class SimplePaste
         e.message
       }
     rescue Exception => e
-      $DEBUG = true
+      # $DEBUG = true
       if $DEBUG
         result = ''
         result << "<pre>"
