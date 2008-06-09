@@ -1,0 +1,26 @@
+
+= SimplePaste Web Application
+
+== What's this?
+
+This is SimplePaste Web Application.
+
+== Require
+
+* Ruby 1.8.* or later
+
+== Install
+
+* Copy files anyplace you want.
+* Read *.rb, *.cgi
+* Edit *.cgi
+
+== License
+
+Ruby's.
+
+== Contact
+
+Author: Koichi Sasada <ko1 at atdot dot net>
+        http://atdot.net/sp/
+
