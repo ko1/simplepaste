@@ -7,6 +7,7 @@ TextPasteURL = 'http://www.atdot.net/sp/commit/auto'
 require 'uri'
 require 'cgi'
 require 'net/http'
+require 'optparse'
 Net::HTTP.version_1_2
 
 def paste str
@@ -19,10 +20,15 @@ def paste str
   }
 end
 
+OPTS={}
+opt = OptionParser.new
+opt.on("-t title"){|v| OPTS[:t] = v+"\n" }
+opt.parse!(ARGV)
+
 if ARGV.empty?
-  paste ARGF.read
+  paste OPTS[:t]+ARGF.read
 else
   ARGV.each{|file|
-    paste File.read(file)
+    paste OPTS[:t]+File.read(file)
   }
 end
