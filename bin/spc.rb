@@ -13,8 +13,9 @@ Net::HTTP.version_1_2
 def paste str
   body = CGI.escape(str)
   uri = URI.parse(TextPasteURL)
+  proxy = URI.parse(ENV["http_proxy"] || "")
 
-  Net::HTTP.start(uri.host, uri.port) {|http|
+  Net::HTTP.start(uri.host, uri.port, proxy.host, proxy.port) {|http|
     response = http.post(uri.path, 'paste_body=' + body)
     puts response.body
   }
