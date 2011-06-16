@@ -1,7 +1,9 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 
 <html>
 <head>
-<title> SimplePaste: make </title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title> SimplePaste: make </title>
 </head>
 <body>
 
@@ -9,8 +11,21 @@
 <textarea name='paste_body' rows='30' cols='80'>
 </textarea>
 </br>
-<input type='hidden' name='page_id' value='<%= params['page_id'] %>'></input>
 <input type='submit' value='paste'></input>
+</br>
+Title: <input type='text' name='title'></input>
+</br>
+Language: 
+<select name='language'>
+  <option value=''>Plain</option>
+  <% if SYNTAX_HIGHLIGHTER_PATH %>
+    <% SH_LANG_NAMES.sort.each{|name, lang| %>
+      <option value='<%= lang %>'><%= name %></option>
+    <% } %>
+  <% end %>
+</select>
+
+<input type='hidden' name='page_id' value='<%= params[:page_id] %>'></input>
 
 </form>
 </body>

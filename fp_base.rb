@@ -23,6 +23,19 @@ class FileSimplePaste < SimplePaste
     super
   end
 
+  def filesize_str path
+    size = File.size(path)
+    us = %w(B KB MB GB)
+    u = us.shift
+    while size/1024 > 1
+      size /= 1024.0
+      u = us.shift
+      break if us.empty?
+    end
+
+    "#{'%.2f' % size}#{u}"
+  end
+
   def on_view page_id, *args
     move_to :make, page_id unless StoreClass.exist? page_id
     store = StoreClass.open(page_id)
@@ -41,9 +54,9 @@ class FileSimplePaste < SimplePaste
     text << '<ul>'
     text << file_info.map{|fi|
       e  = "<li>"
-      e << "<a  href='#{File.join(base, fi[1])}'>"
-      e << "<img src='#{File.join(base, fi[2])}' /><br />" if fi[2]
-      e << "#{escape(fi[0])}</a>"
+      e << "<a  href='#{File.join(base, URI.encode(fi[1]))}'>"
+      e << "<img src='#{File.join(base, URI.encode(fi[2]))}' /><br />" if fi[2]
+      e << "#{escape(fi[0])}</a> (#{filesize_str fi[1]})"
       e << "</li>"
       e
     }.join("\n")
@@ -92,8 +105,17 @@ class FileSimplePaste < SimplePaste
     }
   end
 
+  def basename name
+    if true # for DOSISH
+      /([^\\]+)\Z/ =~ name
+      $1
+    else
+      File.basename(name)
+    end
+  end
+
   def commit_new_entry store
-    if q('user_password') == PASSWORD[q('user_name')]
+    if q('passwd') == 'fpp' # q('user_name') && (q('user_password') == PASSWORD[q('user_name')])
       $FILE_SIZE_LIMIT  = $FILE_TYPE_LIMIT  = $FILE_COUNT_LIMIT = nil
     end
 
@@ -111,13 +133,14 @@ class FileSimplePaste < SimplePaste
         raise "Too large data: #{length} > #{$FILE_SIZE_LIMIT}"
       end
 
-      orig_file  = File.basename(URI.encode(f.original_filename))
+      oorig_file = basename(f.original_filename)
+      orig_file  = URI.encode(oorig_file)
       saved_path = store.attach(orig_file, contents)
       saved_file = saved_path.sub(BASE_DIR + '/', '')
       thumb_file = nil
 
       if /\Aimage/ !~ `file -ib #{saved_path} 2> /dev/null`
-        if $FILE_TYPE_LIMIT && $FILE_TYPE_LIMIT
+        if $FILE_TYPE_LIMIT
           raise "File is not image: #{f.original_filename}"
         end
       else

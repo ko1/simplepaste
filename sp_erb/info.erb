@@ -1,4 +1,4 @@
-﻿<html>
+<html>
   <head>
     <title> Simple Paste </title>
   </head>
@@ -21,26 +21,13 @@ Simple Paste は、ほかのアプリケーションと連携すると面白い�
 <ul>
 <li><%= script_url %>/check/newid で、利用できる次の id を教えてもらえます。</li>
 <li><%= script_url %>/commit/auto で、ペーストした後、表示用ページにリダイレクトせずにその貼り付けた URL のみを返します。貼り付けるデータは、'paste_body' という名前で post してください。</li>
-<li><a href='<%= script_url %>/sp'> このプログラムのソースコード </a>。ライセンスは ruby's で。 </li>
+<li><a href='http://github.com/ko1/simplepaste/tree/master'> このプログラムのソースコード </a>。ライセンスは ruby's で。 </li>
 </ul>
 
 <h3> プログラムからの利用サンプル </h3>
-<pre>
-#!/usr/bin/env ruby
-# spc.rb
 
-require 'cgi'
-require 'net/http'
-
-body = CGI.escape(ARGF.read)
-
-Net::HTTP.version_1_2
-Net::HTTP.start('<%= @cgi.server_name %>', 80) {|http|
-  response = http.post('<%=script_name%>/commit/auto',
-    'paste_body=' + body)
-  puts response.body
-}
-</pre>
+<p><a href='http://github.com/ko1/simplepaste/tree/master/bin/spc.rb'> spc.rb </a>
+</p>
 
 <h2> ご注意 </h2>
 <ul>

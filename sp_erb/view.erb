@@ -1,39 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
 <html>
 <head>
-<title> <%= params['page_id'] %> - SimplePaste view </title>
+  <title><%= params['title'] || params['body'].to_a.first %> -  
+         SimplePaste view </title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<style type='text/css'>
+<% if SYNTAX_HIGHLIGHTER_PATH %>
+
+<!-- syntax highliter -->
+<% if (lang = params['language']) && !lang.empty? %>
+  <script type="text/javascript" src="<%= SYNTAX_HIGHLIGHTER_PATH %>/scripts/shCore.js"></script>
+  <script type="text/javascript" src="<%= SYNTAX_HIGHLIGHTER_PATH %>/scripts/<%= SH_LANGS[lang][:file] %>"></script>
+  <link href="<%= SYNTAX_HIGHLIGHTER_PATH %>/styles/shCore.css" rel="stylesheet" type="text/css" />
+  <link href="<%= SYNTAX_HIGHLIGHTER_PATH %>/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+  <script type="text/javascript">
+    SyntaxHighlighter.all();
+  </script>
+<% end %>
+
+<script type="text/javascript">
+function changeLanguage(lang) {
+  window.location.href = window.location.href.replace(/\?.+/, '') + "?lang=" + lang;
+}
+</script>
+
+<% end %>
+
+<style type="text/css">
 <!--
-pre#paste_body{
-  border: 1px solid gray;
+body{
+	background: khaki;
+	color: /* white; */ black;
+}
+
+h1 {
+  margin: 0;
+}
+
+pre#paste_body {
+  background: white;
+  color: black;
+  border: 1px solid grey;
   padding: 0.5em;
-  
+  margin-top:0;
+
   white-space: -moz-pre-wrap; /* Mozilla */
   white-space: -pre-wrap;     /* Opera 4-6 */
   white-space: -o-pre-wrap;   /* Opera 7 */
   white-space: pre-wrap;      /* CSS3 */
-  word-wrap: break-word;      /* IE 5.5+ */
+  word-wrap:   break-word;      /* IE 5.5+ */
 }
-  -->
+
+-->
+
 </style>
 </head>
 
 <body>
 
-<%= params['header'] %>
+<% if params['title'] %>
+<h1>
+  <%= params['title'] %>
+</h1>
+<% end %>
 
-<pre id='paste_body'><%= params['body'] %></pre>
+<% if SYNTAX_HIGHLIGHTER_PATH %>
+<select name='language' onChange='changeLanguage(this.options[selectedIndex].value)'>
+  <option value=''>Plain</option>
+  <% SH_LANG_NAMES.sort.each{|name, lang| %>
+    <option value='<%= lang %>' <%= params['language'] == lang ? 'selected' : ''%>><%= name %></option>
+  <% } %>
+</select>
+<% end %>
+
+<%= params['header'] %> <br/>
+<pre <%= params['class'] %> id='paste_body'><%= params['body'] %></pre>
 
 <ul>
 
 <li>Paste time: <%= params['time'] %></li>
 <li>Paste IP addr: <%= params['ipaddr'] %>
 <li>Your paste URL is <a href='<%= params['v_url'] %>'><%= params['v_url'] %> </a></li>
-<li>Read only URL is <a href='<%= params['ro_url'] %>'><%= params['ro_url'] %> </a></li>
-<li><a href='<%= "#{script_url}/make" %>'>make new page</a></li>
-<% unless params['stick'] %>
-  <li><a href='<%= "#{script_url}/commit/delete/#{params['page_id']}" %>'>delete this page</a></li>
-  <li><a href='<%= "#{script_url}/commit/stick/#{params['page_id']}" %>'>stick this page</a></li>
+
+<% unless params['readonly'] %>
+  <li>Raw URL is <a href='<%= params['raw_url'] %>'><%= params['raw_url'] %> </a></li>
+  <li><a href='<%= "#{script_url}/make" %>'>make new page</a></li>
+  <% unless params['stick'] %>
+    <li><a href='<%= "#{script_url}/commit/delete/#{params['page_id']}" %>'>delete this page</a></li>
+    <li><a href='<%= "#{script_url}/commit/stick/#{params['page_id']}" %>'>stick this page</a></li>
+  <% end %>
 <% end %>
 
 <%= params['hooter'] %>
@@ -41,6 +98,3 @@ pre#paste_body{
 
 </body>
 </html>
-
-
-

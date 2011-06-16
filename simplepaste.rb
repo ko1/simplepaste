@@ -119,6 +119,7 @@ class SimplePaste
   end
 
   def on_commit cmd, page_id = nil, *opts
+    page_id = q('page_id') unless page_id
     case cmd
     when 'new', 'auto'
       store = StoreClass.make(page_id)
@@ -226,7 +227,7 @@ class SimpleStore
   def self.lock
     file = store_path('.lock', '.x.')
 
-    File.open(file, 'wb'){|f|
+    File.open(file, 'w'){|f|
       f.flock(File::LOCK_SH)
       yield
     }
@@ -360,3 +361,4 @@ if $0 == __FILE__
   SimpleStore.delete store.id
   system('ls sp_store')
 end
+
